@@ -131,6 +131,20 @@ public class DaoIntegrationTest {
     }
 
     @Test
+    void testGetBookByTitleCriteria() {
+        Book book = bookDao.findBookByTitleCriteria("Clean Code");
+
+        assertThat(book).isNotNull();
+    }
+
+    @Test
+    void testGetBookByNameNative() {
+        Book book = bookDao.findBookByTitleNative("Clean Code");
+
+        assertThat(book).isNotNull();
+    }
+
+    @Test
     void testGetBook() {
         Book book = bookDao.getById(3L);
 
@@ -181,6 +195,13 @@ public class DaoIntegrationTest {
     @Test
     void testGetAuthorByNameCriteria() {
         Author author = authorDao.findAuthorByNameCriteria("Craig", "Walls");
+
+        assertThat(author).isNotNull();
+    }
+
+    @Test
+    void testGetAuthorByNameNative() {
+        Author author = authorDao.findAuthorByNameNative("Craig", "Walls");
 
         assertThat(author).isNotNull();
     }

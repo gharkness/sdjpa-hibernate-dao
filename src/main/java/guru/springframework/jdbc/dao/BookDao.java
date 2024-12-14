@@ -5,6 +5,10 @@ import guru.springframework.jdbc.domain.Book;
 import java.util.List;
 
 public interface BookDao {
+    Book findBookByTitleNative(String title);
+
+    Book findBookByTitleCriteria(String title);
+
     List<Book> findAll();
 
     Book findByISBN(String isbn);
