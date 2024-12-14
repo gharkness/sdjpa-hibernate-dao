@@ -1,10 +1,7 @@
 package guru.springframework.jdbc.domain;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +13,10 @@ import java.util.Objects;
 @Getter
 @Setter
 @AllArgsConstructor
+@NamedQueries({
+        @NamedQuery(name = "book_find_all", query = "FROM Book"),
+        @NamedQuery(name = "find_by_title", query = "FROM Book b WHERE b.title = :title")
+})
 public class Book {
 
     @Id

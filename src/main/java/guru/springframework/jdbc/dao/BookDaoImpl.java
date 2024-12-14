@@ -5,11 +5,26 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @AllArgsConstructor
 public class BookDaoImpl implements BookDao {
 
     private final EntityManagerFactory emf;
+
+    @Override
+    public List<Book> findAll() {
+        EntityManager em = getEntityManager();
+
+        try {
+            TypedQuery<Book> typedQuery = em.createNamedQuery("book_find_all", Book.class);
+
+            return typedQuery.getResultList();
+        } finally {
+            em.close();
+        }
+    }
 
     @Override
     public Book findByISBN(String isbn) {
@@ -37,8 +52,7 @@ public class BookDaoImpl implements BookDao {
     @Override
     public Book findBookByTitle(String title) {
         EntityManager em = getEntityManager();
-        TypedQuery<Book> query = em.createQuery("SELECT b FROM Book b " +
-                "WHERE b.title = :title", Book.class);
+        TypedQuery<Book> query = em.createNamedQuery("find_by_title", Book.class);
 
         query.setParameter("title", title);
         Book book = query.getSingleResult();
