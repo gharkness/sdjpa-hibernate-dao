@@ -6,6 +6,7 @@ import guru.springframework.jdbc.dao.BookDao;
 import guru.springframework.jdbc.dao.BookDaoImpl;
 import guru.springframework.jdbc.domain.Author;
 import guru.springframework.jdbc.domain.Book;
+import org.assertj.core.internal.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -13,6 +14,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,6 +33,35 @@ public class DaoIntegrationTest {
 
     @Autowired
     BookDao bookDao;
+
+    @Test
+    void testFindAllByAuthors() {
+        List<Author> authors = authorDao.findAll();
+
+        assertThat(authors).isNotNull();
+        assertThat(authors.size()).isGreaterThan(0);
+    }
+
+    @Test
+    void testFindBookByISBN() {
+        Book book = new Book();
+        book.setIsbn("1234" + RandomString.make());
+        book.setTitle("ISBN Test");
+
+        Book saved = bookDao.saveNewBook(book);
+
+        Book fetched = bookDao.findByISBN(book.getIsbn());
+
+        assertThat(fetched).isNotNull();
+    }
+
+    @Test
+    void testListAuthorByLastNameLike() {
+        List<Author> authors = authorDao.listAuthorByLastNameLike("Wall");
+
+        assertThat(authors).isNotNull();
+        assertThat(authors.size()).isGreaterThan(0);
+    }
 
     @Test
     void testDeleteBook() {

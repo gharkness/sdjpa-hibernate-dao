@@ -1,10 +1,7 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Book;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +10,21 @@ import org.springframework.stereotype.Component;
 public class BookDaoImpl implements BookDao {
 
     private final EntityManagerFactory emf;
+
+    @Override
+    public Book findByISBN(String isbn) {
+        EntityManager em = getEntityManager();
+
+        try {
+            TypedQuery<Book> query = em.createQuery("SELECT b FROM Book b WHERE b.isbn = :isbn", Book.class);
+            query.setParameter("isbn", isbn);
+
+            Book book = query.getSingleResult();
+            return book;
+        } finally {
+            em.close();
+        }
+    }
 
     @Override
     public Book getById(Long id) {
